@@ -4,13 +4,8 @@ class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
 
   def index
-   
-    if logged_in?
       @task = current_user.tasks.build
       @tasks = current_user.tasks.order(id: :desc).page(params[:page])
-    else
-      redirect_to login_path
-    end
   end
   
   def show
@@ -27,7 +22,7 @@ class TasksController < ApplicationController
       redirect_to root_url
     else
       flash.now[:danger] = 'Taskが登録されませんでした。'
-      render 'tasks#index'
+      render :new
     end
   end
   
@@ -48,7 +43,7 @@ class TasksController < ApplicationController
     @task.destroy
     
     flash[:success] = 'Taskは正常に削除されました。'
-    redirect_back(fallback_location: root_path)
+    redirect_to root_url
   end
   
   private
